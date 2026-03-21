@@ -5,10 +5,10 @@ const API_BASE = 'https://employee-management-api-rsvn.onrender.com/api';
 function showToast(message, type = 'success') {
     const toastContainer = document.getElementById('toast-container');
     if (!toastContainer) return;
-    
+
     const bgColor = type === 'success' ? 'bg-success' : 'bg-danger';
     const toastId = 'toast-' + Date.now();
-    
+
     const toastHtml = `
         <div id="${toastId}" class="toast show align-items-center text-white ${bgColor} border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="d-flex">
@@ -19,11 +19,11 @@ function showToast(message, type = 'success') {
             </div>
         </div>
     `;
-    
+
     toastContainer.insertAdjacentHTML('beforeend', toastHtml);
     setTimeout(() => {
         const t = document.getElementById(toastId);
-        if(t) t.remove();
+        if (t) t.remove();
     }, 5000);
 }
 
@@ -87,10 +87,10 @@ function setupLiveValidation(formId, rules) {
             input.classList.add('is-invalid');
             input.classList.remove('is-valid');
             const feedback = input.nextElementSibling;
-            if(feedback && feedback.classList.contains('invalid-feedback')) {
+            if (feedback && feedback.classList.contains('invalid-feedback')) {
                 feedback.textContent = errorMessage;
             } else if (input.parentElement && input.parentElement.querySelector('.invalid-feedback')) {
-                 input.parentElement.querySelector('.invalid-feedback').textContent = errorMessage;
+                input.parentElement.querySelector('.invalid-feedback').textContent = errorMessage;
             }
         }
         return valid;
@@ -120,15 +120,15 @@ function renderPagination(totalRecords, limit, currentPage, containerId, pageCha
     const totalPages = Math.ceil(totalRecords / limit);
     const container = document.getElementById(containerId);
     if (!container) return;
-    
+
     let html = '';
-    
+
     html += `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
                 <a class="page-link" href="#" onclick="${pageChangeCallbackFnName}(${currentPage - 1}); return false;">
                   <i class="ti ti-chevron-left"></i> prev
                 </a>
              </li>`;
-             
+
     for (let i = 1; i <= totalPages; i++) {
         if (totalPages > 7) {
             if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
@@ -146,6 +146,6 @@ function renderPagination(totalRecords, limit, currentPage, containerId, pageCha
                   next <i class="ti ti-chevron-right"></i>
                 </a>
              </li>`;
-             
+
     container.innerHTML = html;
 }
