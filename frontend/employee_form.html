@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <title>Employee Form - Employee Payroll System</title>
+    <!-- CSS files -->
+    <link href="assets/style.css?v=2" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/css/tabler.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.36.0/tabler-icons.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="page">
+      <!-- Sidebar -->
+      <aside class="navbar navbar-vertical navbar-expand-sm navbar-dark">
+        <div class="container-fluid">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <h1 class="navbar-brand navbar-brand-autodark">
+            <a href="dashboard.html">
+               Payroll System
+            </a>
+          </h1>
+          <div class="collapse navbar-collapse" id="sidebar-menu">
+            <ul class="navbar-nav pt-lg-3">
+              <li class="nav-item">
+                <a class="nav-link" href="dashboard.html" >
+                  <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-home"></i></span>
+                  <span class="nav-link-title">Dashboard</span>
+                </a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="employees.html" >
+                  <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-users"></i></span>
+                  <span class="nav-link-title">Employees</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="payroll.html" >
+                  <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-wallet"></i></span>
+                  <span class="nav-link-title">Payroll</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+      
+      <!-- Main Content -->
+      <div class="page-wrapper">
+        <div class="page-header d-print-none">
+          <div class="container-xl">
+            <div class="row g-2 align-items-center">
+              <div class="col">
+                <h2 class="page-title" id="pageTitle">Add Employee</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="page-body">
+          <div class="container-xl">
+            <div class="card">
+              <div class="card-body">
+                <form id="employeeForm">
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label class="form-label required">Full Name</label>
+                      <input type="text" class="form-control" name="name" placeholder="John Doe">
+                      <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label required">Email Address</label>
+                      <input type="email" class="form-control" name="email" placeholder="john@example.com">
+                      <div class="invalid-feedback"></div>
+                    </div>
+                  </div>
+                  
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label class="form-label required">Phone Number</label>
+                      <input type="text" class="form-control" name="phone" placeholder="1234567890">
+                      <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label required mb-2">Gender</label>
+                      <div>
+                        <label class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" name="gender" value="Male">
+                          <span class="form-check-label">Male</span>
+                        </label>
+                        <label class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" name="gender" value="Female">
+                          <span class="form-check-label">Female</span>
+                        </label>
+                        <label class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" name="gender" value="Other">
+                          <span class="form-check-label">Other</span>
+                        </label>
+                      </div>
+                      <div class="invalid-feedback text-danger d-none" id="genderErr">This field is required</div>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-md-4">
+                      <label class="form-label required">Department</label>
+                      <input type="text" class="form-control" name="department" placeholder="Engineering">
+                      <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label required">Designation</label>
+                      <input type="text" class="form-control" name="designation" placeholder="Software Engineer">
+                      <div class="invalid-feedback"></div>
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label required">Date of Joining</label>
+                      <input type="date" class="form-control" name="doj">
+                      <div class="invalid-feedback"></div>
+                    </div>
+                  </div>
+                  
+                  <div class="form-footer text-end mt-4 border-top pt-3">
+                    <a href="employees.html" class="btn btn-outline-secondary me-2"><i class="ti ti-x me-2"></i> Cancel</a>
+                    <button type="submit" class="btn btn-primary" id="saveBtn"><i class="ti ti-device-floppy me-2"></i> Save Employee</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Toast Container -->
+      <div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080"></div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js"></script>
+    <script src="assets/app.js?v=2"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const empId = urlParams.get('id');
+        
+        const form = document.getElementById('employeeForm');
+        
+        const isFormValid = setupLiveValidation('employeeForm', {
+            name: ['required'],
+            email: ['required', 'email'],
+            phone: ['required', 'phone'],
+            department: ['required'],
+            designation: ['required'],
+            doj: ['required']
+        });
+
+        if (empId) {
+            document.getElementById('pageTitle').textContent = 'Edit Employee';
+            document.getElementById('saveBtn').innerHTML = '<i class="ti ti-device-floppy me-2"></i> Update Employee';
+            loadEmployee(empId);
+        }
+
+        async function loadEmployee(id) {
+            try {
+                const emp = await apiCall(`/employees/${id}`);
+                form.elements['name'].value = emp.name;
+                form.elements['email'].value = emp.email;
+                form.elements['phone'].value = emp.phone;
+                form.elements['gender'].value = emp.gender;
+                form.elements['department'].value = emp.department;
+                form.elements['designation'].value = emp.designation;
+                form.elements['doj'].value = emp.doj;
+            } catch (e) {
+                showToast('Failed to load employee details', 'error');
+            }
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const genderVal = form.elements['gender'].value;
+            const genderErr = document.getElementById('genderErr');
+            
+            let passed = true;
+            if(!isFormValid()) passed = false;
+            
+            if(!genderVal) {
+                genderErr.classList.remove('d-none');
+                passed = false;
+            } else {
+                genderErr.classList.add('d-none');
+            }
+            
+            if (!passed) {
+                showToast('Please fix the errors in the form', 'error');
+                return;
+            }
+
+            const payload = {
+                name: form.elements['name'].value,
+                email: form.elements['email'].value,
+                phone: form.elements['phone'].value,
+                gender: genderVal,
+                department: form.elements['department'].value,
+                designation: form.elements['designation'].value,
+                doj: form.elements['doj'].value
+            };
+
+            const url = empId ? `/employees/${empId}` : '/employees/';
+            const method = empId ? 'PUT' : 'POST';
+
+            try {
+                const saveBtn = document.getElementById('saveBtn');
+                saveBtn.disabled = true;
+                saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
+                
+                await apiCall(url, {
+                    method,
+                    body: JSON.stringify(payload)
+                });
+                
+                showToast(empId ? 'Employee updated successfully' : 'Employee created successfully');
+                setTimeout(() => window.location.href = 'employees.html', 1500);
+            } catch (err) {
+                document.getElementById('saveBtn').disabled = false;
+                document.getElementById('saveBtn').innerHTML = empId ? '<i class="ti ti-device-floppy me-2"></i> Update Employee' : '<i class="ti ti-device-floppy me-2"></i> Save Employee';
+            }
+        });
+        
+        Array.from(form.elements['gender']).forEach(r => r.addEventListener('change', () => document.getElementById('genderErr').classList.add('d-none')));
+    </script>
+  </body>
+</html>

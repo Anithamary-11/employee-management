@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <title>Employees - Employee Payroll System</title>
+    <!-- CSS files -->
+    <link href="assets/style.css?v=2" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/css/tabler.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.36.0/tabler-icons.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="page">
+      <!-- Sidebar -->
+      <aside class="navbar navbar-vertical navbar-expand-sm navbar-dark">
+        <div class="container-fluid">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <h1 class="navbar-brand navbar-brand-autodark">
+            <a href="dashboard.html">
+               Payroll System
+            </a>
+          </h1>
+          <div class="collapse navbar-collapse" id="sidebar-menu">
+            <ul class="navbar-nav pt-lg-3">
+              <li class="nav-item">
+                <a class="nav-link" href="dashboard.html" >
+                  <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-home"></i></span>
+                  <span class="nav-link-title">Dashboard</span>
+                </a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="employees.html" >
+                  <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-users"></i></span>
+                  <span class="nav-link-title">Employees</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="payroll.html" >
+                  <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-wallet"></i></span>
+                  <span class="nav-link-title">Payroll</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+      
+      <!-- Main Content -->
+      <div class="page-wrapper">
+        <div class="page-header d-print-none">
+          <div class="container-xl">
+            <div class="row g-2 align-items-center">
+              <div class="col">
+                <h2 class="page-title">Employees</h2>
+              </div>
+              <div class="col-auto ms-auto d-print-none">
+                <div class="btn-list">
+                  <button id="exportBtn" class="btn btn-success d-none d-sm-inline-block">
+                    <i class="ti ti-download me-1"></i> Export CSV
+                  </button>
+                  <a href="employee_form.html" class="btn btn-primary d-none d-sm-inline-block">
+                    <i class="ti ti-plus me-1"></i> Add Employee
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="page-body">
+          <div class="container-xl">
+            <div class="card">
+              <div class="card-header border-0">
+                <div class="ms-auto w-bs-25">
+                   <div class="input-icon">
+                     <span class="input-icon-addon">
+                       <i class="ti ti-search"></i>
+                     </span>
+                     <input type="text" id="searchInput" class="form-control" placeholder="Search employees...">
+                   </div>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="table card-table table-vcenter text-nowrap datatable">
+                  <thead>
+                    <tr>
+                      <th><a href="#" class="text-reset table-sort" onclick="setSort('emp_id')">ID</a></th>
+                      <th><a href="#" class="text-reset table-sort" onclick="setSort('name')">Name</a></th>
+                      <th><a href="#" class="text-reset table-sort" onclick="setSort('email')">Email</a></th>
+                      <th><a href="#" class="text-reset table-sort" onclick="setSort('department')">Department</a></th>
+                      <th><a href="#" class="text-reset table-sort" onclick="setSort('designation')">Designation</a></th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="employeeTableBody">
+                    <tr><td colspan="6" class="text-center">Loading...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="card-footer d-flex align-items-center">
+                <p class="m-0 text-muted">Showing <span id="startRec">0</span> to <span id="endRec">0</span> of <span id="totalRec">0</span> entries</p>
+                <ul class="pagination m-0 ms-auto" id="paginationContainer"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Delete Modal -->
+      <div class="modal modal-blur fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-status bg-danger"></div>
+            <div class="modal-body text-center py-4">
+              <i class="ti ti-alert-triangle text-danger mb-2" style="font-size: 3rem;"></i>
+              <h3>Are you sure?</h3>
+              <div class="text-muted">Do you really want to delete this employee? What you've done cannot be undone.</div>
+            </div>
+            <div class="modal-footer">
+              <div class="w-100">
+                <div class="row">
+                  <div class="col"><a href="#" class="btn w-100" data-bs-dismiss="modal"><i class="ti ti-x me-2"></i>Cancel</a></div>
+                  <div class="col"><button type="button" class="btn btn-danger w-100" id="confirmDeleteBtn"><i class="ti ti-trash me-2"></i>Delete</button></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Toast Container -->
+      <div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080"></div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js"></script>
+    <script src="assets/app.js?v=2"></script>
+    <script>
+        let currentPage = 1;
+        const limit = 10;
+        let deleteId = null;
+        let deleteModalInstance = null;
+        let sortBy = 'emp_id';
+        let sortOrder = 'desc';
+
+        function setSort(field) {
+            if (sortBy === field) {
+                sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortBy = field;
+                sortOrder = 'asc';
+            }
+            loadEmployees();
+        }
+
+        async function loadEmployees() {
+            const search = document.getElementById('searchInput').value;
+            let url = `/employees/?page=${currentPage}&limit=${limit}&sort_by=${sortBy}&order=${sortOrder}`;
+            if (search) url += `&search=${encodeURIComponent(search)}`;
+            
+            try {
+                const data = await apiCall(url);
+                const tbody = document.getElementById('employeeTableBody');
+                tbody.innerHTML = '';
+                
+                if (data.data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center">No employees found.</td></tr>';
+                } else {
+                    data.data.forEach(emp => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${emp.emp_id}</td>
+                            <td>${emp.name}</td>
+                            <td><a href="mailto:${emp.email}">${emp.email}</a></td>
+                            <td>${emp.department}</td>
+                            <td>${emp.designation}</td>
+                            <td>
+                                <a href="view_employee.html?id=${emp.emp_id}" class="btn btn-sm btn-outline-success"><i class="ti ti-eye"></i> View</a>
+                                <a href="employee_form.html?id=${emp.emp_id}" class="btn btn-sm btn-outline-primary"><i class="ti ti-edit"></i> Edit</a>
+                                <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete(${emp.emp_id})"><i class="ti ti-trash"></i> Delete</button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+                
+                document.getElementById('totalRec').textContent = data.total;
+                document.getElementById('startRec').textContent = data.total > 0 ? (currentPage - 1) * limit + 1 : 0;
+                document.getElementById('endRec').textContent = Math.min(currentPage * limit, data.total);
+                
+                renderPagination(data.total, limit, currentPage, 'paginationContainer', 'goToPage');
+            } catch (err) {
+                document.getElementById('employeeTableBody').innerHTML = '<tr><td colspan="6" class="text-center text-danger">Failed to load data</td></tr>';
+            }
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            loadEmployees();
+        }
+
+        function confirmDelete(id) {
+            deleteId = id;
+            if (!deleteModalInstance) {
+                deleteModalInstance = new bootstrap.Modal(document.getElementById('deleteModal'));
+            }
+            deleteModalInstance.show();
+        }
+
+        document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+            if (deleteId) {
+                try {
+                    await apiCall(`/employees/${deleteId}`, { method: 'DELETE' });
+                    showToast('Employee deleted successfully');
+                    deleteModalInstance.hide();
+                    loadEmployees();
+                } catch (e) {
+                }
+            }
+        });
+
+        let timeout = null;
+        document.getElementById('searchInput').addEventListener('input', () => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                currentPage = 1;
+                loadEmployees();
+            }, 500);
+        });
+
+        document.getElementById('exportBtn').addEventListener('click', async () => {
+            try {
+                const data = await apiCall(`/employees/?page=1&limit=1000`);
+                let csvContent = "data:text/csv;charset=utf-8,";
+                csvContent += "ID,Name,Email,Phone,Department,Designation,DOJ\n";
+                data.data.forEach(row => {
+                   const values = [row.emp_id, `"${row.name}"`, row.email, row.phone, `"${row.department}"`, `"${row.designation}"`, row.doj];
+                   csvContent += values.join(",") + "\n";
+                });
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "employees.csv");
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+            } catch(e) {
+               showToast('Export failed', 'error');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', loadEmployees);
+    </script>
+  </body>
+</html>

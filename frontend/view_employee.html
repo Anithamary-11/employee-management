@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <title>View Employee - Employee Payroll System</title>
+    <!-- CSS files -->
+    <link href="assets/style.css?v=2" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/css/tabler.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.36.0/tabler-icons.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="page">
+      <!-- Sidebar -->
+      <aside class="navbar navbar-vertical navbar-expand-sm navbar-dark">
+        <div class="container-fluid">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <h1 class="navbar-brand navbar-brand-autodark">
+            <a href="dashboard.html">
+               Payroll System
+            </a>
+          </h1>
+          <div class="collapse navbar-collapse" id="sidebar-menu">
+            <ul class="navbar-nav pt-lg-3">
+              <li class="nav-item">
+                <a class="nav-link" href="dashboard.html" >
+                  <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-home"></i></span>
+                  <span class="nav-link-title">Dashboard</span>
+                </a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="employees.html" >
+                  <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-users"></i></span>
+                  <span class="nav-link-title">Employees</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="payroll.html" >
+                  <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-wallet"></i></span>
+                  <span class="nav-link-title">Payroll</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+      
+      <!-- Main Content -->
+      <div class="page-wrapper">
+        <div class="page-header d-print-none">
+          <div class="container-xl">
+            <div class="row g-2 align-items-center">
+              <div class="col">
+                <div class="page-pretitle">Employee Profile</div>
+                <h2 class="page-title" id="pageTitle">Employee Details</h2>
+              </div>
+              <div class="col-auto ms-auto d-print-none">
+                <div class="btn-list">
+                  <a href="employees.html" class="btn btn-outline-secondary">
+                    <i class="ti ti-arrow-left me-2"></i> Back
+                  </a>
+                  <a href="#" id="editBtn" class="btn btn-primary">
+                    <i class="ti ti-edit me-2"></i> Edit
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="page-body">
+          <div class="container-xl">
+            <div class="row row-cards">
+              <!-- Employee Profile Card -->
+              <div class="col-md-5 col-lg-4">
+                <div class="card">
+                  <div class="card-body p-4 text-center">
+                    <span class="avatar avatar-xl mb-3 rounded" id="empAvatar"></span>
+                    <h3 class="m-0 mb-1" id="empName">Loading...</h3>
+                    <div class="text-muted" id="empDesignation"></div>
+                    <div class="mt-3">
+                      <span class="badge bg-purple-lt" id="empDepartment"></span>
+                    </div>
+                  </div>
+                  <div class="d-flex">
+                    <a href="#" class="card-btn" id="empEmailBtn" title="Send Email"><i class="ti ti-mail"></i></a>
+                    <a href="#" class="card-btn" id="empPhoneBtn" title="Call"><i class="ti ti-phone"></i></a>
+                  </div>
+                  <div class="card-body">
+                    <div class="row mb-3">
+                      <div class="col-sm-5 text-muted"><strong>Employee ID:</strong></div>
+                      <div class="col-sm-7" id="empIdBadge"></div>
+                    </div>
+                    <div class="row mb-3">
+                      <div class="col-sm-5 text-muted"><strong>Email:</strong></div>
+                      <div class="col-sm-7" id="empEmail"></div>
+                    </div>
+                    <div class="row mb-3">
+                      <div class="col-sm-5 text-muted"><strong>Phone:</strong></div>
+                      <div class="col-sm-7" id="empPhone"></div>
+                    </div>
+                    <div class="row mb-3">
+                      <div class="col-sm-5 text-muted"><strong>Gender:</strong></div>
+                      <div class="col-sm-7" id="empGender"></div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-5 text-muted"><strong>Date of Join:</strong></div>
+                      <div class="col-sm-7" id="empDOJ"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Payroll History -->
+              <div class="col-md-7 col-lg-8">
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">Salary History</h3>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table card-table table-vcenter text-nowrap datatable">
+                      <thead>
+                        <tr>
+                          <th>Payroll Date</th>
+                          <th>Basic Salary</th>
+                          <th>Bonus</th>
+                          <th>Net Salary</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody id="payrollTableBody">
+                        <tr><td colspan="5" class="text-center">Loading...</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Toast Container -->
+      <div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080"></div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js"></script>
+    <script src="assets/app.js?v=2"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const empId = urlParams.get('id');
+
+        async function loadProfile() {
+            try {
+                const emp = await apiCall(`/employees/${empId}`);
+                
+                document.getElementById('editBtn').href = `employee_form.html?id=${emp.emp_id}`;
+                document.getElementById('empAvatar').textContent = emp.name.substring(0,2).toUpperCase();
+                document.getElementById('empName').textContent = emp.name;
+                document.getElementById('empDesignation').textContent = emp.designation;
+                document.getElementById('empDepartment').textContent = emp.department;
+                
+                document.getElementById('empIdBadge').textContent = `#${emp.emp_id}`;
+                document.getElementById('empEmail').textContent = emp.email;
+                document.getElementById('empPhone').textContent = emp.phone;
+                document.getElementById('empGender').textContent = emp.gender;
+                document.getElementById('empDOJ').textContent = new Date(emp.doj).toLocaleDateString();
+
+                document.getElementById('empEmailBtn').href = `mailto:${emp.email}`;
+                document.getElementById('empPhoneBtn').href = `tel:${emp.phone}`;
+                
+                loadPayrolls(emp.emp_id);
+            } catch (e) {
+                showToast('Failed to load employee details', 'error');
+            }
+        }
+        
+        async function loadPayrolls(id) {
+            try {
+                // Fetch up to latest 12 entries
+                const data = await apiCall(`/payroll/?emp_id=${id}&page=1&limit=12&sort_by=salary_date&order=desc`);
+                const tbody = document.getElementById('payrollTableBody');
+                tbody.innerHTML = '';
+                
+                if (data.data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="text-center">No payroll records found.</td></tr>';
+                } else {
+                    data.data.forEach(p => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${new Date(p.salary_date).toLocaleDateString()}</td>
+                            <td>₹${parseFloat(p.basic_salary).toFixed(2)}</td>
+                            <td>₹${parseFloat(p.bonus).toFixed(2)}</td>
+                            <td><strong>₹${parseFloat(p.net_salary).toFixed(2)}</strong></td>
+                            <td>
+                                <a href="payslip.html?id=${p.payroll_id}" class="btn btn-sm btn-outline-info"><i class="ti ti-file-invoice me-1"></i> Payslip</a>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            } catch (err) {
+                document.getElementById('payrollTableBody').innerHTML = '<tr><td colspan="5" class="text-center text-danger">Failed to load payload data</td></tr>';
+            }
+        }
+
+        if (empId) {
+            loadProfile();
+        } else {
+            window.location.href = 'employees.html';
+        }
+    </script>
+  </body>
+</html>

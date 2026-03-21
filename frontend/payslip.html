@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <title>Payslip - Employee Payroll System</title>
+    <link href="assets/style.css?v=2" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/css/tabler.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.36.0/tabler-icons.min.css" rel="stylesheet">
+    <style>
+      @media print {
+        .page-wrapper { margin: 0; padding: 0; }
+        .d-print-none { display: none !important; }
+        body { background: white; }
+        .card { box-shadow: none; border: 1px solid #ccc; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="page-wrapper">
+        <div class="page-header d-print-none">
+          <div class="container-xl">
+            <div class="row g-2 align-items-center">
+              <div class="col">
+                <a href="payroll.html" class="btn btn-outline-secondary">
+                  <i class="ti ti-arrow-left"></i> Back to Payroll
+                </a>
+              </div>
+              <div class="col-auto ms-auto d-print-none">
+                <button type="button" class="btn btn-primary" onclick="window.print();">
+                  <i class="ti ti-printer"></i> Print Payslip
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="page-body">
+          <div class="container-xl">
+            <div class="card card-lg">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-6">
+                    <p class="h3">Company Name Inc.</p>
+                    <address>
+                      123 Business Avenue<br>
+                      Tech City, TC 10001<br>
+                      contact@company.com
+                    </address>
+                  </div>
+                  <div class="col-6 text-end">
+                    <p class="h3">PAYSLIP</p>
+                    <div id="payrollDate">Month, Year</div>
+                    <div class="mt-2 text-muted">Payslip #<span id="payrollId">000</span></div>
+                  </div>
+                </div>
+                
+                <div class="my-5 border-top border-bottom py-3">
+                  <div class="row">
+                    <div class="col-6">
+                      <div class="text-muted mb-1">Employee Details</div>
+                      <strong class="d-block text-uppercase" id="empName">Loading...</strong>
+                      <div id="empParams">Loading...</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <table class="table table-transparent table-responsive">
+                  <thead>
+                    <tr>
+                      <th>Earnings</th>
+                      <th class="text-end" style="width: 20%">Amount</th>
+                      <th>Deductions</th>
+                      <th class="text-end" style="width: 20%">Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Basic Salary</td>
+                      <td class="text-end" id="basicSalary">₹0.00</td>
+                      <td>Provident Fund (PF)</td>
+                      <td class="text-end text-danger" id="pfAmount">-₹0.00</td>
+                    </tr>
+                    <tr>
+                      <td>House Rent Allowance (HRA)</td>
+                      <td class="text-end" id="hraAmount">₹0.00</td>
+                      <td></td>
+                      <td class="text-end"></td>
+                    </tr>
+                    <tr>
+                      <td>Dearness Allowance (DA)</td>
+                      <td class="text-end" id="daAmount">₹0.00</td>
+                      <td></td>
+                      <td class="text-end"></td>
+                    </tr>
+                    <tr>
+                      <td>Bonus</td>
+                      <td class="text-end" id="bonusAmount">₹0.00</td>
+                      <td></td>
+                      <td class="text-end"></td>
+                    </tr>
+                    <tr>
+                      <td colspan="4" class="font-weight-bold text-uppercase text-end border-top pb-0 mt-3 pt-3">Net Salary</td>
+                    </tr>
+                    <tr>
+                      <td colspan="4" class="text-end display-5 font-weight-bold text-success" id="netSalary">₹0.00</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script src="assets/app.js?v=2"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            if(!id) return;
+
+            try {
+                const data = await apiCall(`/payroll/${id}`);
+                document.getElementById('payrollId').textContent = data.payroll_id;
+                document.getElementById('payrollDate').textContent = new Date(data.salary_date).toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+                
+                document.getElementById('empName').textContent = data.name;
+                document.getElementById('empParams').innerHTML = `
+                    ${data.designation} <br>
+                    Dept: ${data.department} <br>
+                    Email: ${data.email}
+                `;
+
+                document.getElementById('basicSalary').textContent = '₹' + parseFloat(data.basic_salary).toFixed(2);
+                document.getElementById('hraAmount').textContent = '₹' + parseFloat(data.hra).toFixed(2);
+                document.getElementById('daAmount').textContent = '₹' + parseFloat(data.da).toFixed(2);
+                document.getElementById('bonusAmount').textContent = '₹' + parseFloat(data.bonus).toFixed(2);
+                document.getElementById('pfAmount').textContent = '-₹' + parseFloat(data.pf).toFixed(2);
+                
+                document.getElementById('netSalary').textContent = '₹' + parseFloat(data.net_salary).toFixed(2);
+            } catch (err) {
+                alert('Cannot load payslip');
+            }
+        });
+    </script>
+  </body>
+</html>

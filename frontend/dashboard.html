@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <title>Dashboard - Employee Payroll System</title>
+    <!-- CSS files -->
+    <link href="assets/style.css?v=2" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/css/tabler.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.36.0/tabler-icons.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="page">
+      <!-- Sidebar -->
+      <aside class="navbar navbar-vertical navbar-expand-sm navbar-dark">
+        <div class="container-fluid">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <h1 class="navbar-brand navbar-brand-autodark">
+            <a href="dashboard.html">
+               Payroll System
+            </a>
+          </h1>
+          <div class="collapse navbar-collapse" id="sidebar-menu">
+            <ul class="navbar-nav pt-lg-3">
+              <li class="nav-item active">
+                <a class="nav-link" href="dashboard.html" >
+                  <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-home"></i></span>
+                  <span class="nav-link-title">Dashboard</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="employees.html" >
+                  <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-users"></i></span>
+                  <span class="nav-link-title">Employees</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="payroll.html" >
+                  <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-wallet"></i></span>
+                  <span class="nav-link-title">Payroll</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+      
+      <!-- Main Content -->
+      <div class="page-wrapper">
+        <div class="page-header d-print-none">
+          <div class="container-xl">
+            <div class="row g-2 align-items-center">
+              <div class="col">
+                <h2 class="page-title">Dashboard Summary</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="page-body">
+          <div class="container-xl">
+            <div class="row row-cards">
+              <div class="col-sm-6 col-lg-3">
+                <div class="card card-sm">
+                  <div class="card-body">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+                        <span class="bg-primary text-white avatar">
+                          <i class="ti ti-users"></i>
+                        </span>
+                      </div>
+                      <div class="col">
+                        <div class="font-weight-medium">Total Employees</div>
+                        <div class="text-muted" id="totalEmployees">Loading...</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-lg-3">
+                <div class="card card-sm">
+                  <div class="card-body">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+                        <span class="bg-success text-white avatar">
+                          <i class="ti ti-currency-rupee"></i>
+                        </span>
+                      </div>
+                      <div class="col">
+                        <div class="font-weight-medium">Total Payroll Processed</div>
+                        <div class="text-muted" id="totalPayroll">Loading...</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Toast Container -->
+      <div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080"></div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js"></script>
+    <script src="assets/app.js?v=2"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const data = await apiCall('/dashboard/summary');
+                document.getElementById('totalEmployees').textContent = data.total_employees;
+                document.getElementById('totalPayroll').textContent = `₹${data.total_payroll.toFixed(2)}`;
+            } catch (err) {
+                document.getElementById('totalEmployees').textContent = 'Error';
+                document.getElementById('totalPayroll').textContent = 'Error';
+            }
+        });
+    </script>
+  </body>
+</html>

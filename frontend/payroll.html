@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <title>Payroll - Employee Payroll System</title>
+    <!-- CSS files -->
+    <link href="assets/style.css?v=2" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/css/tabler.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.36.0/tabler-icons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="page">
+      <!-- Sidebar -->
+      <aside class="navbar navbar-vertical navbar-expand-sm navbar-dark">
+        <div class="container-fluid">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <h1 class="navbar-brand navbar-brand-autodark">
+            <a href="dashboard.html">
+               Payroll System
+            </a>
+          </h1>
+          <div class="collapse navbar-collapse" id="sidebar-menu">
+            <ul class="navbar-nav pt-lg-3">
+              <li class="nav-item">
+                <a class="nav-link" href="dashboard.html" >
+                  <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-home"></i></span>
+                  <span class="nav-link-title">Dashboard</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="employees.html" >
+                  <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-users"></i></span>
+                  <span class="nav-link-title">Employees</span>
+                </a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="payroll.html" >
+                  <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="ti ti-wallet"></i></span>
+                  <span class="nav-link-title">Payroll</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+      
+      <div class="page-wrapper">
+        <div class="page-header d-print-none">
+          <div class="container-xl">
+            <div class="row g-2 align-items-center">
+              <div class="col">
+                <h2 class="page-title">Payroll Management</h2>
+              </div>
+              <div class="col-auto ms-auto d-print-none">
+                <div class="btn-list">
+                  <button id="exportPayrollBtn" class="btn btn-success d-none d-sm-inline-block">
+                    <i class="ti ti-download me-1"></i> Export CSV
+                  </button>
+                  <button class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#addSalaryModal">
+                    <i class="ti ti-plus me-1"></i> Process Salary
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="page-body">
+          <div class="container-xl">
+            <div class="card">
+              <div class="card-header border-0 pe-2">
+                <h3 class="card-title">Salary History</h3>
+                <div class="ms-auto w-bs-25">
+                   <div class="input-icon">
+                     <span class="input-icon-addon">
+                       <i class="ti ti-search"></i>
+                     </span>
+                     <input type="text" id="searchPayrollParams" class="form-control" placeholder="Search employee...">
+                   </div>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="table card-table table-vcenter text-nowrap datatable">
+                  <thead>
+                    <tr>
+                      <th><a href="#" class="text-reset table-sort" onclick="setSort('payroll_id')">Payroll ID</a></th>
+                      <th><a href="#" class="text-reset table-sort" onclick="setSort('employee_name')">Employee Name</a></th>
+                      <th><a href="#" class="text-reset table-sort" onclick="setSort('salary_date')">Salary Date</a></th>
+                      <th><a href="#" class="text-reset table-sort" onclick="setSort('basic_salary')">Basic</a></th>
+                      <th><a href="#" class="text-reset table-sort" onclick="setSort('net_salary')">Net Salary</a></th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="payrollTableBody">
+                    <tr><td colspan="6" class="text-center">Loading...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="card-footer d-flex align-items-center">
+                <p class="m-0 text-muted">Showing <span id="startRec">0</span> to <span id="endRec">0</span> of <span id="totalRec">0</span> entries</p>
+                <ul class="pagination m-0 ms-auto" id="paginationContainer"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Add Salary Modal -->
+      <div class="modal modal-blur fade" id="addSalaryModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Process Salary</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="salaryForm">
+              <div class="modal-body">
+                <div class="mb-3">
+                  <label class="form-label required">Employee</label>
+                  <select class="form-select" name="emp_id" id="empSelect" placeholder="Select an employee...">
+                  </select>
+                  <div class="invalid-feedback d-block" id="empErr"></div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label required">Basic Salary</label>
+                  <div class="input-group input-group-flat">
+                    <span class="input-group-text">₹</span>
+                    <input type="number" step="0.01" class="form-control" name="basic_salary" placeholder="5000">
+                    <div class="invalid-feedback"></div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Bonus (Optional)</label>
+                  <div class="input-group input-group-flat">
+                    <span class="input-group-text">₹</span>
+                    <input type="number" step="0.01" class="form-control" name="bonus" value="0.00">
+                    <div class="invalid-feedback"></div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label required">Salary Date</label>
+                  <input type="date" class="form-control" name="salary_date" id="salaryDate">
+                  <div class="invalid-feedback"></div>
+                </div>
+                <div class="alert alert-info mt-3">
+                  <h4 class="alert-title">Calculation Rules:</h4>
+                  <ul class="mb-0">
+                    <li>HRA = +20%</li>
+                    <li>DA = +10%</li>
+                    <li>PF = -5%</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn me-auto" data-bs-dismiss="modal"><i class="ti ti-x me-2"></i>Close</button>
+                <button type="submit" class="btn btn-primary" id="saveSalaryBtn"><i class="ti ti-device-floppy me-2"></i>Process Payroll</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080"></div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+    <script src="assets/app.js?v=2"></script>
+    <script>
+        let currentPage = 1;
+        const limit = 10;
+        let empTsInstance = null;
+        let sortBy = 'payroll_id';
+        let sortOrder = 'desc';
+        
+        const form = document.getElementById('salaryForm');
+        const isFormValid = setupLiveValidation('salaryForm', {
+            basic_salary: ['required', 'positive'],
+            bonus: ['nonNegative'],
+            salary_date: ['required']
+        });
+
+        document.getElementById('salaryDate').valueAsDate = new Date();
+
+        function setSort(field) {
+            if (sortBy === field) {
+                sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortBy = field;
+                sortOrder = 'asc';
+            }
+            loadPayroll();
+        }
+
+        async function loadPayroll() {
+            const search = document.getElementById('searchPayrollParams').value;
+            let url = `/payroll/?page=${currentPage}&limit=${limit}&sort_by=${sortBy}&order=${sortOrder}`;
+            if (search) url += `&search=${encodeURIComponent(search)}`;
+            
+            try {
+                const data = await apiCall(url);
+                const tbody = document.getElementById('payrollTableBody');
+                tbody.innerHTML = '';
+                
+                if (data.data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center">No payroll records found.</td></tr>';
+                } else {
+                    data.data.forEach(p => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>#${p.payroll_id}</td>
+                            <td>${p.employee_name} <div class="text-muted fs-5">${p.department}</div></td>
+                            <td>${new Date(p.salary_date).toLocaleDateString()}</td>
+                            <td>₹${parseFloat(p.basic_salary).toFixed(2)}</td>
+                            <td><strong>₹${parseFloat(p.net_salary).toFixed(2)}</strong></td>
+                            <td>
+                                <a href="payslip.html?id=${p.payroll_id}" class="btn btn-sm btn-outline-info"><i class="ti ti-file-invoice me-1"></i> View Payslip</a>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+                
+                document.getElementById('totalRec').textContent = data.total;
+                document.getElementById('startRec').textContent = data.total > 0 ? (currentPage - 1) * limit + 1 : 0;
+                document.getElementById('endRec').textContent = Math.min(currentPage * limit, data.total);
+                
+                renderPagination(data.total, limit, currentPage, 'paginationContainer', 'goToPage');
+            } catch (err) {
+                document.getElementById('payrollTableBody').innerHTML = '<tr><td colspan="6" class="text-center text-danger">Failed to load data</td></tr>';
+            }
+        }
+
+        async function loadEmployeesDropdown() {
+            try {
+                const data = await apiCall(`/employees/?page=1&limit=1000`);
+                const select = document.getElementById('empSelect');
+                select.innerHTML = '<option value="">Select an employee...</option>';
+                data.data.forEach(emp => {
+                    const opt = document.createElement('option');
+                    opt.value = emp.emp_id;
+                    opt.textContent = `${emp.name} (${emp.department})`;
+                    select.appendChild(opt);
+                });
+                
+                if(!empTsInstance) {
+                   empTsInstance = new TomSelect('#empSelect', {
+                       create: false,
+                       sortField: { field: "text", direction: "asc" }
+                   });
+                   empTsInstance.on('change', () => document.getElementById('empErr').textContent = '');
+                } else {
+                   empTsInstance.sync();
+                }
+            } catch (err) {}
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            loadPayroll();
+        }
+
+        let timeout = null;
+        document.getElementById('searchPayrollParams').addEventListener('input', () => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                currentPage = 1;
+                loadPayroll();
+            }, 500);
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const empVal = form.elements['emp_id'].value;
+            let passed = true;
+            if (!isFormValid()) passed = false;
+            
+            if(!empVal) {
+                document.getElementById('empErr').textContent = 'Please select an employee.';
+                passed = false;
+            }
+            if(!passed) return;
+
+            const payload = {
+                emp_id: parseInt(empVal),
+                basic_salary: parseFloat(form.elements['basic_salary'].value),
+                bonus: parseFloat(form.elements['bonus'].value || '0'),
+                salary_date: form.elements['salary_date'].value
+            };
+
+            try {
+                document.getElementById('saveSalaryBtn').disabled = true;
+                const result = await apiCall('/payroll/', {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                showToast('Salary processed. Net Salary: ₹' + result.components.net_salary);
+                const modal = bootstrap.Modal.getInstance(document.getElementById('addSalaryModal'));
+                modal.hide();
+                form.reset();
+                if(empTsInstance) empTsInstance.clear();
+                document.getElementById('salaryDate').valueAsDate = new Date();
+                loadPayroll();
+            } catch (err) {
+            } finally {
+                document.getElementById('saveSalaryBtn').disabled = false;
+            }
+        });
+        
+        document.getElementById('exportPayrollBtn').addEventListener('click', async () => {
+            try {
+                const data = await apiCall(`/payroll/?page=1&limit=1000`);
+                let csvContent = "data:text/csv;charset=utf-8,";
+                csvContent += "Payroll ID,Employee Name,Salary Date,Basic Salary,Net Salary\n";
+                data.data.forEach(row => {
+                   const values = [row.payroll_id, `"${row.employee_name}"`, row.salary_date, row.basic_salary, row.net_salary];
+                   csvContent += values.join(",") + "\n";
+                });
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "payroll.csv");
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+            } catch(e) {
+               showToast('Export failed', 'error');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPayroll();
+            loadEmployeesDropdown();
+        });
+    </script>
+  </body>
+</html>
