@@ -1,6 +1,6 @@
 // CHANGE THIS URL to your Production Backend Server URL (e.g. Render/Railway/Heroku)
 // Default is set to localhost for active development.
-const API_BASE = 'http://localhost:8000/api';
+const API_BASE = 'https://employee-management-api-rsvn.onrender.com/api';
 
 function showToast(message, type = 'success') {
     const toastContainer = document.getElementById('toast-container');
